@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C.B. — Dossiê Confidencial | Carlos Bittencourt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #3DB8F5;
+    --black: #0A0A0A;
+    --dark: #111111;
+    --mid: #1A1A1A;
+    --white: #F5F5F0;
+    --gray: #888;
+    --radius: 20px;
+    --radius-lg: 32px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--white);
+    color: var(--black);
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 14px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.3s, backdrop-filter 0.3s;
+  }
+  nav.scrolled {
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(16px);
+  }
+  .nav-logo {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 1.4rem;
+    color: var(--blue);
+    letter-spacing: -0.5px;
+  }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--blue); }
+
+  /* ─── SECTION LABELS ─── */
+  .section-label {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 12px;
+  }
+
+  /* ─── FADE IN ─── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* ════════════════════════════════
+     CAPA / DOSSIE
+  ════════════════════════════════ */
+  #capa {
+    min-height: 100vh;
+    background: var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  #capa::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(61,184,245,0.12) 0%, transparent 70%);
+    top: -100px; right: -100px;
+    pointer-events: none;
+  }
+  .dossie-folder {
+    position: relative;
+    width: min(420px, 90vw);
+    animation: folderFloat 4s ease-in-out infinite;
+    transition: transform 0.4s ease;
+  }
+  .dossie-folder:hover { transform: scale(1.03) rotate(-1deg); }
+  @keyframes folderFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+  }
+
+  .folder-back {
+    position: absolute;
+    top: -14px; right: -14px;
+    width: 100%;
+    height: 100%;
+    background: var(--dark);
+    border-radius: var(--radius-lg);
+    z-index: 0;
+  }
+  .folder-front {
+    position: relative;
+    z-index: 1;
+    background: var(--blue);
+    border-radius: var(--radius-lg);
+    padding: 48px 40px 36px;
+    min-height: 560px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 32px 80px rgba(61,184,245,0.2), 0 8px 24px rgba(0,0,0,0.4);
+  }
+  .folder-header {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 2rem;
+    line-height: 1.1;
+    color: var(--black);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+  }
+  .folder-sub {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--black);
+    margin-top: 24px;
+    letter-spacing: 0.05em;
+  }
+  .stamp-wrapper {
+    margin: 28px 0;
+    display: inline-block;
+    position: relative;
+  }
+  .stamp {
+    background: var(--white);
+    border: 3px solid var(--black);
+    padding: 10px 20px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 1.3rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--black);
+    transform: rotate(-3deg);
+    display: inline-block;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+    position: relative;
+  }
+  .stamp::before, .stamp::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border: 1.5px solid rgba(0,0,0,0.15);
+    margin: 4px;
+  }
+  .folder-body {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.4;
+    color: var(--black);
+    text-transform: uppercase;
+  }
+  .folder-cta {
+    text-align: right;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    color: var(--black);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+  .folder-cta svg { animation: arrowBounce 1.5s ease-in-out infinite; }
+  @keyframes arrowBounce {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(6px); }
+  }
+  .capa-initials {
+    position: absolute;
+    top: 28px; left: 40px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 1.4rem;
+    color: var(--blue);
+    letter-spacing: -0.02em;
+  }
+
+  /* ════════════════════════════════
+     HERO / SOBRE MIM
+  ════════════════════════════════ */
+  #sobre {
+    background: var(--white);
+    padding: 100px 40px 80px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 48px;
+    align-items: start;
+  }
+  .hero-name {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: var(--black);
+    margin-bottom: 8px;
+  }
+  .hero-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 32px;
+  }
+  .hero-story {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: #333;
+    max-width: 600px;
+    text-align: justify;
+  }
+  .hero-story p { margin-bottom: 16px; }
+  .hero-story p:last-child { margin-bottom: 0; }
+
+  .hero-right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .photo-card {
+    background: var(--blue);
+    border-radius: var(--radius-lg);
+    aspect-ratio: 3/4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .photo-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+  }
+  .photo-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--black);
+    text-align: center;
+    padding: 24px;
+  }
+  .photo-placeholder svg { opacity: 0.6; }
+  .photo-placeholder span {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .focus-card {
+    background: var(--black);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    color: var(--white);
+  }
+  .focus-card-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 16px;
+  }
+  .focus-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .focus-list li {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .focus-dot {
+    width: 8px; height: 8px;
+    background: var(--blue);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 36px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 26px;
+    border-radius: 60px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-primary {
+    background: var(--blue);
+    color: var(--black);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(61,184,245,0.35);
+  }
+  .btn-dark {
+    background: var(--black);
+    color: var(--white);
+  }
+  .btn-dark:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    background: #222;
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--black);
+    border: 2px solid var(--black);
+  }
+  .btn-outline:hover {
+    background: var(--black);
+    color: var(--white);
+    transform: translateY(-2px);
+  }
+
+  /* ════════════════════════════════
+     HABILIDADES
+  ════════════════════════════════ */
+  #habilidades {
+    background: var(--black);
+    padding: 90px 40px;
+  }
+  .section-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .section-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    letter-spacing: -0.02em;
+    color: var(--white);
+    margin-bottom: 48px;
+    line-height: 1.1;
+  }
+  .section-title.dark { color: var(--black); }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .skill-card {
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.03em;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: default;
+  }
+  .skill-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(61,184,245,0.2);
+  }
+  .skill-card.blue { background: var(--blue); color: var(--black); }
+  .skill-card.dark { background: var(--mid); color: var(--white); border: 1px solid #2a2a2a; }
+
+  /* ════════════════════════════════
+     ACADEMIA
+  ════════════════════════════════ */
+  #academia {
+    background: var(--white);
+    padding: 90px 40px;
+  }
+  .academia-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 12px;
+  }
+  .academia-card {
+    border-radius: var(--radius-lg);
+    padding: 36px 32px;
+  }
+  .academia-card.blue { background: var(--blue); }
+  .academia-card.dark { background: var(--black); color: var(--white); }
+
+  .academia-card h3 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 1.2rem;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .academia-card .meta {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 16px;
+  }
+  .academia-card p {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    text-align: justify;
+  }
+  .academia-img-area {
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 16px;
+    text-align: center;
+    border: 2px dashed rgba(255,255,255,0.3);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: border-color 0.2s;
+
+    /* Proporção 1:1 */
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .academia-img-area.light {
+    border-color: rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.06);
+    color: rgba(0,0,0,0.4);
+  }
+  .academia-img-area:hover { border-color: var(--blue); }
+  .academia-img-area img {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    display: block;
+    object-fit: cover; /* preenche o quadrado sem distorcer */
+  }
+
+  /* ════════════════════════════════
+     CURRÍCULO
+  ════════════════════════════════ */
+  #curriculo {
+    background: var(--black);
+    padding: 90px 40px;
+  }
+  .cv-wrapper {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .cv-card {
+    background: var(--blue);
+    border-radius: var(--radius-lg);
+    aspect-ratio: 210/297;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .cv-card:hover {
+    transform: translateY(-6px) rotate(0.5deg);
+    box-shadow: 0 32px 80px rgba(61,184,245,0.25);
+  }
+  .cv-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+  }
+  .cv-placeholder {
+    text-align: center;
+    padding: 40px;
+    color: rgba(0,0,0,0.5);
+  }
+  .cv-placeholder svg { margin-bottom: 16px; opacity: 0.5; }
+  .cv-placeholder p {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* ════════════════════════════════
+     PROJETOS — SHARED
+  ════════════════════════════════ */
+  .project-section {
+    padding: 90px 40px;
+  }
+  .project-section:nth-of-type(odd) { background: var(--white); }
+  .project-section:nth-of-type(even) { background: #F0F0EB; }
+
+  .proj-header-bar {
+    background: var(--black);
+    border-radius: var(--radius);
+    padding: 22px 32px;
+    margin-bottom: 36px;
+    background: linear-gradient(90deg, var(--black) 60%, var(--blue) 100%);
+  }
+  .proj-header-bar h2 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 1.4rem;
+    color: var(--white);
+    letter-spacing: -0.01em;
+  }
+  .proj-header-bar .proj-case-num {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 6px;
+  }
+
+  .proj-top-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+  .proj-card {
+    background: var(--blue);
+    border-radius: var(--radius);
+    padding: 28px 26px;
+  }
+  .proj-card.dark {
+    background: var(--black);
+    color: var(--white);
+  }
+  .proj-card h4 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    opacity: 0.65;
+  }
+  .proj-card p, .proj-card ul {
+    font-size: 0.95rem; 
+    line-height: 1.65;
+    text-align: justify;
+  }
+  .proj-card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .proj-card ul li::before {
+    content: '— ';
+    opacity: 0.5;
+  }
+
+  /* ─── GALERIA DE PROJETOS ─── */
+  .proj-gallery {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    margin: 28px 0;
+  }
+  .proj-img-slot {
+    aspect-ratio: 210/297;
+    background: var(--black);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .proj-img-slot:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.3);
+  }
+  .proj-img-slot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 14px;
+    display: block;
+  }
+  .proj-img-slot-label {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    text-align: center;
+    padding: 8px;
+    line-height: 1.4;
+  }
+
+  /* ─── LIGHTBOX DA GALERIA ─── */
+  .proj-lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.93);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .proj-lightbox.open { display: flex; }
+  .proj-lightbox img {
+    max-width: min(98vw, 1800px);
+    max-height: 100vh;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  }
+  .proj-lightbox-close {
+    position: absolute;
+    top: 20px; right: 24px;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: #fff;
+    font-size: 1.4rem;
+    line-height: 1;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+  .proj-lightbox-close:hover { background: rgba(255,255,255,0.2); }
+  .proj-lightbox-empty {
+    text-align: center;
+    color: rgba(255,255,255,0.4);
+    font-family: 'Outfit', sans-serif;
+  }
+  .proj-lightbox-empty p { font-size: 0.9rem; margin-bottom: 8px; }
+  .proj-lightbox-empty small { font-size: 0.75rem; opacity: 0.6; }
+
+  .proj-bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .proj-result-card {
+    background: var(--blue);
+    border-radius: var(--radius);
+    padding: 28px 26px;
+    text-align: justify;
+  }
+  .proj-result-card.dark {
+    background: var(--black);
+    color: var(--white);
+  }
+  .proj-result-card h4 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    opacity: 0.65;
+  }
+  .proj-result-card p {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    text-align: justify;
+  }
+  .proj-disclaimer {
+  margin-top: 20px;
+  padding: 14px 20px;
+  border-left: 3px solid var(--blue);
+  background: rgba(61,184,245,0.07);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.85rem;
+  color: var(--gray);
+  font-style: italic;
+}
+
+  /* ════════════════════════════════
+     OUTRAS EXPERIÊNCIAS
+  ════════════════════════════════ */
+  #experiencias {
+    background: var(--white);
+    padding: 90px 40px;
+  }
+  .exp-timeline {
+    position: relative;
+    padding-left: 32px;
+    margin-top: 12px;
+  }
+  .exp-timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--blue), transparent);
+  }
+  .exp-item {
+    position: relative;
+    margin-bottom: 48px;
+  }
+  .exp-item::before {
+    content: '';
+    position: absolute;
+    left: -27px; top: 6px;
+    width: 12px; height: 12px;
+    background: var(--blue);
+    border-radius: 50%;
+    border: 3px solid var(--white);
+    box-shadow: 0 0 0 2px var(--blue);
+  }
+  .exp-period {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 4px;
+  }
+  .exp-role {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: var(--black);
+    line-height: 1.2;
+  }
+  .exp-company {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: var(--gray);
+    margin-bottom: 10px;
+  }
+  .exp-desc {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: #444;
+    max-width: 620px;
+    text-align: justify;
+  }
+  .exp-media-area {
+    background: #f0f0eb;
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-top: 12px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+     color: #aaa;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    max-width: 400px;
+
+    /* Proporção 1:1 */
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+  }
+  .exp-media-area:hover { border-color: var(--blue); color: var(--blue); }
+  .exp-media-area img {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    display: block;
+    object-fit: cover;
+  }
+      
+  
+  /* ════════════════════════════════
+     CONTATO / FOOTER
+  ════════════════════════════════ */
+  #contato {
+    background: var(--black);
+    padding: 90px 40px 60px;
+  }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  .contact-link-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-decoration: none;
+    transition: transform 0.2s;
+  }
+  .contact-link-row:hover { transform: translateX(6px); }
+  .contact-icon-box {
+    background: var(--blue);
+    border-radius: 14px;
+    width: 52px; height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .contact-label {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 2px;
+  }
+  .contact-value {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--white);
+  }
+  .contact-link-box {
+    background: var(--mid);
+    border-radius: var(--radius);
+    padding: 28px 26px;
+    border: 1px solid #222;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .contact-link-box:hover {
+    border-color: var(--blue);
+    transform: translateY(-3px);
+  }
+
+  .footer-closing {
+    border-top: 1px solid #1a1a1a;
+    padding-top: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer-msg {
+    font-family: 'Source Sans 3', sans-serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--gray);
+    max-width: 480px;
+  }
+  .footer-credits {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #444;
+  }
+  .footer-credits span { color: var(--blue); }
+
+  /* ════════════════════════════════
+     RESPONSIVE
+  ════════════════════════════════ */
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+
+    #sobre { padding: 80px 20px 60px; }
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-right { order: -1; }
+    .photo-card { max-height: 280px; aspect-ratio: auto; }
+
+    #habilidades, #academia, #curriculo, .project-section, #experiencias, #contato {
+      padding: 60px 20px;
+    }
+    .academia-grid, .proj-top-grid, .proj-bottom-grid, .contact-grid {
+      grid-template-columns: 1fr;
+    }
+    .proj-gallery { grid-template-columns: repeat(3, 1fr); }
+    .footer-closing { flex-direction: column; }
+
+    .folder-front { padding: 36px 28px 28px; min-height: 480px; }
+    .folder-header { font-size: 1.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav id="navbar">
+  <div class="nav-logo">C.B.</div>
+  <ul class="nav-links">
+    <li><a href="#sobre">Perfil</a></li>
+    <li><a href="#projeto-001">Destaques</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+</nav>
+
+<!-- ═══ CAPA ═══ -->
+<section id="capa" onclick="document.getElementById('sobre').scrollIntoView({behavior:'smooth'})">
+  <div class="dossie-folder fade-in visible">
+    <div class="folder-back"></div>
+    <div class="folder-front">
+      <div>
+        <div class="folder-header">Informação<br>Confidencial</div>
+        <div class="folder-sub">MELHOR CANDIDATO:<br>CAR**OS BITTEN****T</div>
+      </div>
+      <div class="stamp-wrapper">
+        <div class="stamp">CONFIDENTIAL</div>
+      </div>
+      <div class="folder-body">
+        Este documento contém<br>informações do candidato ideal<br>para sua empresa.
+      </div>
+      <div class="folder-cta">
+        CLIQUE
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SOBRE / HERO ═══ -->
+<section id="sobre">
+  <div class="section-label">Dossiê de Carreira — Relatório Inicial</div>
+  <div class="hero-grid">
+    <div class="fade-in">
+      <h1 class="hero-name">Carlos<br>Bittencourt</h1>
+      <p class="hero-title">GRC &amp; Projetos · Segurança da Informação</p>
+      <div class="hero-story">
+        <!-- ════ EDITAR TEXTO AQUI ════ -->
+        <p>Eu moro no interior de Minas Gerais e cresci muito próximo da natureza. Meu pai cuida há muitos anos de um ponto de ecoturismo na Cachoeira de Cocais, e acompanhar esse trabalho me fez desenvolver desde cedo um olhar de respeito pela natureza e pelas pessoas que visitam aquele lugar.</p>
+        <p>Já na adolescência comecei a ajudá-lo algumas vezes no atendimento aos turistas na portaria Queda do Véu, e esse contato direto com pessoas me ensinou a receber bem quem chega. Eu também monitorava o acesso ao local e fazia algumas vendas no bar. Mesmo sendo atividades simples, aquilo começou a despertar em mim um senso de responsabilidade com Segurança, Dados e Organização.</p>
+        <p>Tempos depois, já no fim do ensino médio escolhendo qual curso seguir, entendi que a junção de Direito com Tecnologia era o meu maior interesse. </p>
+        <p>Foi aí que iniciei minha jornada em Segurança da Informação!</p>
+        <p>Durante o curso, já atuei em dois projetos marcantes de segurança corporativa, Typhoncom (empresa de telecomunicações) e W.W. Clínicas (Oncologia). Que me fizeram desenvolver certas habilidades, como em: consultoria, gestão e análise de risco, modelagem de processos (BPMN), governança e compliance.</p>
+        <p>Tem sido um trabalho bem desafiador, mas com grande aprendizado, especialmente em como trabalhar em equipe e colaborar com meus colegas.<p>
+        <p>Por isso, hoje quero iniciar minha carreira! Podendo colocar minhas habilidades em um ambiente prático e que preze pelo desenvolvimento contínuo.</p>
+        <p>Estou muito animado e mal posso esperar para estar à frente e fazer parte de um time!</p>
+        <!-- ════════════════════════ -->
+      </div>
+      <div class="btn-row">
+        <a href="#projeto-001" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/></svg>
+          Ver Projetos
+        </a>
+        <a href="https://br.linkedin.com/in/heducarlos" target="_blank" class="btn btn-dark">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          LinkedIn
+        </a>
+        <a href="https://github.com/Sant-Carlos/PROJETOS" target="_blank" class="btn btn-outline">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-right fade-in" style="transition-delay:0.15s">
+      <!-- ════ FOTO: substitua o conteúdo abaixo com uma tag <img> ════
+           Exemplo: <img src="sua-foto.jpg" alt="Carlos Bittencourt">
+           ══════════════════════════════════════════════════════════ -->
+      <div class="photo-card">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          <img width="818" height="847" alt="Image" src="https://github.com/user-attachments/assets/7e6ded2e-cc36-48f0-82b1-a0c5678e02e0" />        </div>
+      </div>
+      <!-- ════════════════════════════════════════════════════════════ -->
+
+      <div class="focus-card">
+        <div class="focus-card-title">Áreas de interesse - Estágio/Trainee</div>
+        <ul class="focus-list">
+          <li><span class="focus-dot"></span>GRC — Governança, Riscos &amp; Compliance</li>
+          <li><span class="focus-dot"></span>Consultoria Estratégica</li>
+          <li><span class="focus-dot"></span>Gestão de Projetos</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ HABILIDADES ═══ -->
+<section id="habilidades">
+  <div class="section-inner">
+    <div class="section-label" style="color:var(--blue)">Diagnóstico — Skills</div>
+    <h2 class="section-title fade-in">Habilidades<br>Adquiridas</h2>
+    <!-- ════ EDITAR SKILLS AQUI: adicione, remova ou renomeie os cards ════ -->
+    <div class="skills-grid">
+      <div class="skill-card blue fade-in">Fundamentos de Segurança: Tríade CIA (ISO/IEC 27001) e Análise de Riscos (ISO/IEC 27005)</div>
+      <div class="skill-card dark fade-in">Modelagem de Processos: BPMN (Bizagi)</div>
+      <div class="skill-card blue fade-in">Metodologia Ágil: Scrum e Kanban</div>
+      <div class="skill-card dark fade-in">Microsoft Office: (Word, Excel e PowerPoint) - Básico</div>
+      <div class="skill-card blue fade-in">Fundamentos de Rede: Modelo OSI e TCP/IP (Básico)</div>
+      <div class="skill-card dark fade-in">Inglês - Básico (Fala - Intermediário)</div>
+      <div class="skill-card dark fade-in">Espanhol - Básico (Fala - Intermediário)</div>
+      <div class="skill-card blue fade-in">Modelagem 3D - SketchUp</div>
+      <div class="skill-card dark fade-in">Perfil: Proativo</div>
+      <div class="skill-card blue fade-in">Colaborativo</div>
+      <div class="skill-card dark fade-in">Questionador</div>
+      <div class="skill-card blue fade-in">Comunicativo</div>
+    </div>
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+  </div>
+</section>
+
+<!-- ═══ ACADEMIA ═══ -->
+<section id="academia">
+  <div class="section-inner">
+    <div class="section-label">Contexto — Origem da Investigação</div>
+    <h2 class="section-title dark fade-in">Marcaram Minha<br>Escolha Acadêmica</h2>
+
+      <div class="academia-card blue fade-in">
+        <div class="meta">Formação Acadêmica</div>
+        <!-- ════ EDITAR FORMAÇÃO AQUI ════ -->
+        <h3>Tecnologia em Segurança da Informação</h3>
+        <p class="meta" style="margin-top:4px">PUC Minas · Julho/2025 — Dezembro/2027</p>
+        <p>Graduação tecnológica com foco em segurança da informação, governança, riscos e compliance, fundamentos de redes, criptografia e gestão de projetos de TI. </p>
+        <!-- ════════════════════════════ -->
+      </div>
+
+    <div class="academia-grid">
+      <div class="academia-card dark fade-in">
+        <div class="meta">Evento Marcante 01</div>
+        <!-- ════ EDITAR EVENTO AQUI ════ -->
+        <h3>1° lugar — "Os Impactos da Tecnologia sobre os Hábitos de Leitura"</h3>
+        <p class="meta" style="margin-top:4px;color:#aaa">Concurso de Redação · "Do Papel Para a Vida"</p>
+        <p>Oi, leitor! Se você está aqui, navegando por este portfólio, é porque um dia alguém teve a ousadia de tornar a internet possível — e isso mudou tudo.</p>
+        <p>Foi justamente essa percepção que transformou minha redação em algo maior do que eu esperava. Comecei a enxergar de forma diferente a relação entre o hábito de leitura e o mundo digital, abordando o impacto do TikTok e os livros best-sellers.</p>
+        <p>Entendi que um vídeo de poucos segundos decide o próximo lançamento literário do momento, e entender esse fenômeno virou uma necessidade. O "hype" das redes moldava repertórios e redefinia o que as pessoas liam.</p>
+        <p>Chegar ao 1° lugar foi a confirmação de que o tema tecnologia ressoava na minha cabeça.</p>  
+        
+        <!-- ════════════════════════════ -->
+        <div class="academia-img-area">
+          <img width="786" height="786" alt="Image" src="https://github.com/user-attachments/assets/43302d9a-a29d-41d2-bdd7-cc829639b17d" />
+        </div>
+      </div>
+
+      <div class="academia-grid">
+      <div class="academia-card blue fade-in" style="grid-column: 1 / -1;">
+        <div class="meta">Evento Marcante 02</div>
+        <!-- ════ EDITAR EVENTO AQUI ════ -->
+        <h3>Construindo uma carreira em Cibersegurança — Yuri Diogenes</h3>
+        <p class="meta" style="margin-top:4px">Livro · Estratégia e habilidades necessárias</p>
+        <p>Quando decidi que iniciaria minha carreira, entendi uma coisa: nada substitui aprender com quem já percorreu o caminho.</p>
+        <p>Foi aí que conheci Yuri Diogenes, mestre em cibersegurança, e sua visão sobre o que realmente importa para se construir construir na área: as habilidades comportamentais.</p>
+        <p>A partir daí, investi na leitura e percebi como ela foi fortalecendo minha visão sobre profissionalismo e mercado, não só em cibersegurança, mas como no todo.</p> 
+        <p>Com isso, consegui montar um plano estratégico, descobrir as áreas da cibersegurança que fazem mais sentido pra mim e identificar as habilidades que quero desenvolver.</p>
+        <!-- ════════════════════════════ -->
+        <div class="academia-img-area light" style="max-width:400px">
+          <img width="3024" height="3021" alt="Image" src="https://github.com/user-attachments/assets/98b05ae5-9ff1-40ca-b050-bc3e812a6595" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CURRÍCULO ═══ -->
+<section id="curriculo">
+  <div class="section-inner">
+    <div class="section-label" style="color:var(--blue)">Anexo — Currículo Vitae</div>
+    <h2 class="section-title fade-in">Currículo</h2>
+    <div class="cv-wrapper fade-in">
+      <!-- ════ INSERIR CURRÍCULO AQUI ════
+           Substitua o div .cv-placeholder por uma tag <img>:
+           Exemplo: <img src="curriculo.jpg" alt="Currículo Carlos Bittencourt">
+           ═══════════════════════════════ -->
+      <div class="cv-card">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <img width="1414" height="2000" alt="Image" src="https://github.com/user-attachments/assets/8db61c2d-8d94-4d6b-ba19-3ad802586a2c" />
+      </div>
+      <!-- ════════════════════════════════ -->
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROJETO 001 ═══ -->
+<section id="projeto-001" class="project-section">
+  <div class="section-inner">
+    <div class="proj-header-bar fade-in">
+      <div class="proj-case-num">Caso 001 — Evidência Coletada</div>
+      <!-- ════ EDITAR TÍTULO DO PROJETO ════ -->
+      <h2>Projeto Fundamentos de Sistemas — TYPHONCOM</h2>
+      <!-- ═══════════════════════════════════ -->
+    </div>
+
+    <div class="proj-top-grid">
+      <div class="proj-card fade-in">
+        <h4>Descrição do Cenário</h4>
+        <!-- ════ EDITAR DESCRIÇÃO ════ -->
+        <p>A Typhoncom, empresa de médio porte do setor de telecomunicações, apresentava um ambiente de TI com vulnerabilidades críticas decorrentes da ausência de uma estrutura formal de segurança da informação. O cenário envolvia riscos associados ao uso não controlado de dispositivos pessoais na rede corporativa (BYOD), presença de Shadow IT — softwares e serviços utilizados sem aprovação do setor de TI —, além de fragilidades tanto na segurança física da infraestrutura quanto nos controles lógicos de acesso e proteção de dados.</p>
+        <p>O desafio central era compreender esse ambiente de forma sistêmica, identificar seus principais pontos de risco e propor uma solução estruturada de TI que fosse tecnicamente viável, alinhada à legislação vigente e adequada à realidade operacional da organização.</p>
+        <!-- ════════════════════════ -->
+      </div>
+      <div class="proj-card dark fade-in">
+        <h4>Aprendizados Desenvolvidos</h4>
+        <!-- ════ EDITAR APRENDIZADOS ════ -->
+        <ul>
+          <p>O projeto permitiu desenvolver e aprofundar competências técnicas aplicadas diretamente ao diagnóstico realizado:</p>
+          <li>Segurança da Informação: Tríade CIA, Análise de Riscos, PSI, Plano de Contingência, PCN, Shadow IT, BYOD, Segurança Física e Lógica;</li>
+          <li>Legislação de T.I.: Marco Civil da Internet, LGPD, Lei de Software, Lei do Teletrabalho e Tipificação Criminal de Delitos Informáticos;</li>
+          <li>Sistemas de Informação: Modelagem de sistemas integrando hardware, software, redes e banco de dados;</li>
+          <li>Fundamentos técnicos (contato inicial): Lógica Computacional, Organização de Computadores e Programação em C#.</li>
+        </ul>
+        <!-- ═════════════════════════ -->
+      </div>
+    </div>
+
+    <!-- ════ GALERIA PROJETO 001 ════
+         Para adicionar imagens: coloque a tag <img src="..."> dentro de cada .proj-img-slot
+         substituindo o .proj-img-slot-label. Clique abre lightbox automaticamente.
+    ════════════════════════════════ -->
+    <div class="proj-gallery fade-in">
+      <div class="proj-img-slot" onclick="projLightboxOpen(this)">
+        <img width="2482" height="3509" alt="Image 1" src="https://github.com/user-attachments/assets/4841176f-6e25-4621-b029-c81f8b6a7d50" />
+      </div>
+      <div class="proj-img-slot" onclick="projLightboxOpen(this)">
+        <img width="2482" height="3509" alt="Image 2" src="https://github.com/user-attachments/assets/52bad9c5-8eea-4f29-b25d-07698052fc7a" />
+      </div>
+      <div class="proj-img-slot" onclick="projLightboxOpen(this)">
+        <img width="2482" height="3509" alt="Image 3" src="https://github.com/user-attachments/assets/2b07f222-1e74-47ab-a6cf-0fd68f671032" />
+      </div>
+      <div class="proj-img-slot" onclick="projLightboxOpen(this)">
+        <img width="2482" height="3509" alt="Image 4" src="https://github.com/user-attachments/assets/6a329445-8c01-4693-a8a5-e4d1c434e5e2" />
+      </div>
+      <div class="proj-img-slot" onclick="projLightboxOpen(this)">
+        <img width="2482" height="3509" alt="Image 5" src="https://github.com/user-attachments/assets/495567d3-104a-4692-a253-ca75ce916b9d" />
+      </div>
+      <div class="proj-img-slot" onclick="projLightboxOpen(this)">
+        <img width="2482" height="3509" alt="Image 6" src="https://github.com/user-attachments/assets/25289a53-b75b-47b5-ab5a-7710e3e49089" />      
+      </div>
+    </div>
+    <!-- ════════════════════════════ -->
+
+    <div class="proj-top-grid">
+      <div class="proj-card fade-in">
+        <h4>Minhas Responsabilidades</h4>
+        <!-- ════ EDITAR RESPONSABILIDADES ════ -->
+        <ul>
+          <p>Atuei como colaborador técnico e de documentação ao longo de todo o semestre, assumindo responsabilidades que transitaram entre a análise estratégica e a execução prática. Minhas principais contribuições foram:</p>
+          <li>Análise organizacional: Auxiliei no levantamento e descrição do negócio.</li>
+          <li>Gestão de BYOD e classificação de riscos: Estruturei o mapeamento dos dispositivos pessoais utilizados na organização, classificando os principais riscos associados.</li>
+          <li>Análise de Riscos e Continuidade: Elaborei análise de riscos, plano de continuidade e contingência dos ativos da empresa</li>
+          <li>Documentação técnica: Estruturei e formatei a documentação completa do projeto em LaTeX.</li>
+          <li>Suporte à equipe: Apoiei os demais integrantes em pontos críticos de cada etapa, com referências, revisões e complementos ao longo do processo colaborativo.</li>
+        </ul>
+        <!-- ══════════════════════════════ -->
+      </div>
+      <div class="proj-card dark fade-in">
+        <h4>Metodologia Aplicada</h4>
+        <!-- ════ EDITAR METODOLOGIA ════ -->
+        <p>O projeto seguiu uma abordagem estruturada de diagnóstico e proposição, organizada em etapas progressivas ao longo do semestre. Iniciou-se com o levantamento e análise do ambiente, com foco em leis, infraestrutura, processos e comportamento dos usuários, seguido da classificação de riscos por meio de matriz de probabilidade e impacto, priorizando ameaças associadas a BYOD e Shadow IT. A partir disso, foi realizada a modelagem do sistema de informação, integrando os componentes técnicos ao fluxo real da organização, e a elaboração da PSI com base em boas práticas de mercado e conformidade com a legislação brasileira. Por fim, toda a entrega foi consolidada em uma documentação técnica formal produzida em LaTeX e complementada por um protótipo navegável, traduzindo a proposta de solução em uma representação visual e funcional para apresentação ao cliente.</p>
+        <!-- ═══════════════════════════ -->
+      </div>
+    </div>
+
+    <div class="proj-bottom-grid" style="margin-top:20px">
+      <div class="proj-result-card fade-in">
+        <h4>Resultado Obtido</h4>
+        <!-- ════ EDITAR RESULTADO ════ -->
+        <p>O projeto foi concluído com a entrega de uma proposta completa de solução segura de TI para a Typhoncom. A equipe atingiu nota acima da média na avaliação da disciplina — resultado que refletiu tanto a profundidade técnica da entrega quanto a qualidade da documentação e da apresentação final. Mais do que o desempenho acadêmico, o projeto demonstrou a capacidade da equipe de traduzir um cenário real e complexo em recomendações estruturadas e aplicáveis.</p>
+        <!-- ═══════════════════════ -->
+      </div>
+      <div class="proj-result-card dark fade-in">
+        <h4>Período</h4>
+        <p>Julho/2025 — Dezembro/2025<br><br>
+        <span style="font-size:0.85rem;opacity:0.6">Projeto Acadêmico — PUC Minas<br>Projeto integrador, em paralelo com as demais disciplinas do curso de Tecnologia em Segurança da Informação.</span></p>
+      </div>
+    </div>
+
+    <div class="proj-disclaimer fade-in">
+      Este projeto foi adaptado para fins de portfólio. Nenhuma informação identificável da organização original foi incluída.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROJETO 002 ═══ -->
+<section id="projeto-002" class="project-section">
+  <div class="section-inner">
+    <div class="proj-header-bar fade-in">
+      <div class="proj-case-num">Caso 002 — Evidência Coletada</div>
+      <!-- ════ EDITAR TÍTULO DO PROJETO ════ -->
+      <h2>Projeto Segurança para Negócios — W.W. Clínicas</h2>
+      <!-- ═══════════════════════════════════ -->
+    </div>
+
+    <div class="proj-top-grid">
+      <div class="proj-card fade-in">
+        <h4>Descrição do Cenário</h4>
+        <!-- ════ EDITAR DESCRIÇÃO ════ -->
+        <p>A W.W. Clínicas, empresa do setor de oncologia, apresentava um ambiente organizacional com lacunas críticas em segurança da informação — cenário de alto risco considerando a sensibilidade dos dados médicos tratados diariamente. Durante o diagnóstico, foram identificadas ausências em controles fundamentais relacionados à proteção, integridade e disponibilidade das informações, além de vulnerabilidades nos processos internos, infraestrutura de rede e conformidade com a LGPD.</p>
+        <p>O projeto teve como objetivo mapear esse cenário sob a ótica de Governança, Risco e Compliance (GRC) e propor melhorias concretas de segurança, orientadas pelos pilares de confidencialidade, integridade e disponibilidade.</p>
+        <!-- ════════════════════════ -->
+      </div>
+      <div class="proj-card dark fade-in">
+        <h4>Aprendizados Desenvolvidos</h4>
+        <!-- ════ EDITAR APRENDIZADOS ════ -->
+        <ul>
+          <p>O projeto aprofundou competências já iniciadas no semestre anterior e introduziu novas frentes de atuação:</p>
+          <li>Gerência de Projetos: Fundamentos do PMBOK e contato com metodologias ágeis — Scrum e Kanban — aplicados à gestão do próprio projeto;</li>
+          <li>Redes de Computadores: Conceitos fundamentais de redes, Modelo OSI e Modelo TCP/IP como base para o planejamento da topologia;</li>
+          <li>Compliance, Normas e Padrões: Introdução à ISO 27001, OWASP e práticas de conformidade e auditoria aplicadas ao diagnóstico de segurança;</li>
+          <li>Processos de Negócio: Modelagem BPMN com bpmn.io e introdução à gestão por BPMS e automação de processos.</li>
+        </ul>
+        <!-- ═════════════════════════ -->
+      </div>
+    </div>
+
+    <!-- ════ GALERIA PROJETO 002 ════
+         Para adicionar imagens: coloque a tag <img src="..."> dentro de cada .proj-img-slot
+         substituindo o .proj-img-slot-label. Clique abre lightbox automaticamente.
+    ════════════════════════════════ -->
+    <div class="proj-gallery fade-in">
+      <div class="proj-img-slot" onclick="projLightboxOpen(this)">
+        <img width="2482" height="3509" alt="Image 1.1" src="https://github.com/user-attachments/assets/829f34fe-5820-4075-9ba2-5c20405358a8" />
+      </div>
+      <div class="proj-img-slot" onclick="projLightboxOpen(this)">
+        <img width="2482" height="3509" alt="Image 2.1" src="https://github.com/user-attachments/assets/6af4eae8-4dc9-495b-9001-bfe5f60fbf92" />
+      </div>
+      <div class="proj-img-slot" onclick="projLightboxOpen(this)">
+        <img width="2482" height="3509" alt="Image 3.1" src="https://github.com/user-attachments/assets/3b285b0d-1895-4edb-910b-a31afbdda93a" />
+      </div>
+      <div class="proj-img-slot" onclick="projLightboxOpen(this)">
+        <img width="2482" height="3509" alt="Image 4.1" src="https://github.com/user-attachments/assets/861f9484-40c7-4923-b1bb-ba9593a28b69" />
+      </div>
+      <div class="proj-img-slot" onclick="projLightboxOpen(this)">
+        <img width="2482" height="3509" alt="Image 5.1" src="https://github.com/user-attachments/assets/5aa9fddb-1c07-495f-925e-c16b886fc67d" />
+      </div>
+      <div class="proj-img-slot" onclick="projLightboxOpen(this)">
+        <img width="2482" height="3509" alt="Image 6.1" src="https://github.com/user-attachments/assets/1414cc1c-7fa8-4aa6-9129-b762a040a1a5" />      
+      </div>
+    </div>
+    <!-- ════════════════════════════ -->
+
+    <div class="proj-top-grid">
+      <div class="proj-card fade-in">
+        <h4>Minhas Responsabilidades</h4>
+        <!-- ════ EDITAR RESPONSABILIDADES ════ -->
+        <ul>
+          <p>Atuei com foco em consultoria estratégica, assumindo responsabilidades analíticas e propositivas ao longo do projeto:</p>
+          <li>Coleta e classificação de ativos: Conduzi o levantamento dos dados e ativos de informação por setor, estruturando a base para a análise de riscos;</li>
+          <li>Modelagem BPMN: Estruturei de forma independente o fluxo de Procedimentos Médicos utilizando bpmn.io, incorporando ao processo cláusulas da LGPD e etapas de descarte seguro — classificação, triagem e documentação;</li>
+          <li>Topologia de rede: Responsável pelo planejamento, desenvolvimento e avaliação da rede da organização (etapa ainda em andamento).</li>
+        </ul>
+        <!-- ══════════════════════════════ -->
+      </div>
+      <div class="proj-card dark fade-in">
+        <h4>Metodologia Aplicada</h4>
+        <!-- ════ EDITAR METODOLOGIA ════ -->
+        <p>O projeto seguiu uma abordagem de consultoria estratégica com foco em GRC, estruturada a partir dos processos de negócio da organização. Iniciou-se com o levantamento e análise da situação atual, identificando ausências em controles básicos de segurança relacionados à proteção, integridade e disponibilidade dos dados. Em seguida, foi realizada a coleta e classificação dos ativos de informação por setor, seguida da modelagem BPMN de alguns processos de negócio escolhidos pela equipe — processo que incorporou boas práticas de segurança. Paralelamente, a equipe avança no planejamento da topologia de rede, contemplando definição de arquitetura e avaliação da solução proposta. As entregas foram versionadas e organizadas via GitHub, ferramenta que também integrou o processo de aprendizado prático do semestre. Todas as etapas são orientadas pelas boas práticas de segurança da informação, com referência à ISO 27001, OWASP e aos requisitos de conformidade com a LGPD.</p>
+        <!-- ═══════════════════════════ -->
+      </div>
+    </div>
+
+    <div class="proj-bottom-grid" style="margin-top:20px">
+      <div class="proj-result-card fade-in">
+        <h4>Resultado Obtido</h4>
+        <!-- ════ EDITAR RESULTADO ════ -->
+        <p>O projeto encontra-se em desenvolvimento, com entregas parciais já avaliadas com bom desempenho acadêmico. As minhas etapas concluídas — diagnóstico organizacional, mapeamento de ativos e modelagem BPMN — geraram resultados práticos relevantes: maior controle sobre a distribuição dos registros médicos e melhora na comunicação entre setores a partir das diretrizes de segurança propostas. As etapas seguintes compreendem a finalização da topologia de rede e a consolidação da proposta completa de melhorias.</p>
+        <!-- ═══════════════════════ -->
+      </div>
+      <div class="proj-result-card dark fade-in">
+        <h4>Período</h4>
+        <!-- ════ EDITAR PERÍODO ════ -->
+        <p>Janeiro/2026 — Julho/2026<br><br>
+        <span style="font-size:0.85rem;opacity:0.6">Projeto Acadêmico — PUC Minas<br>Projeto integrador, em paralelo com as demais disciplinas do curso de Tecnologia em Segurança da Informação.</span></p>
+        <!-- ═══════════════════════ -->
+      </div>
+    </div>
+
+    <div class="proj-disclaimer fade-in">
+      Este projeto foi adaptado para fins de portfólio. Nenhuma informação identificável da organização original foi incluída.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ OUTRAS EXPERIÊNCIAS ═══ -->
+<section id="experiencias">
+  <div class="section-inner">
+    <div class="section-label">Casos Independentes — Desafios Pessoais</div>
+    <h2 class="section-title dark fade-in">Outros Projetos que<br>impactam minha trajetória</h2>
+
+    <div class="exp-timeline">
+
+      <!-- ════ EXPERIÊNCIA 1 — EDITAR AQUI ════ -->
+      <div class="exp-item fade-in">
+        <div class="exp-period">2026 - EM ANDAMENTO</div>
+        <div class="exp-role">OPERAÇÃO CACHOEIRA DE COCAIS - SITE</div>
+        <div class="exp-company">Portaria Queda Do Véu</div>
+        <p class="exp-desc">"Já parou pra pensar em quantos lugares incríveis você ainda não conhece?"</p>
+        <p class="exp-desc">Foi exatamente essa pergunta que me fiz depois de passar um dia atendendo visitantes na Portaria da Cachoeira — pessoas que chegavam perdidas, sem informação, descobrindo o lugar quase por acidente.</p>
+        <p  class="exp-desc">Nesse momento que entendi que a Cachoeira de Cocais merecia mais do que um perfil no Instagram. Merecia uma porta de entrada digital à altura do que ela é na vida real.</p>
+        <p  class="exp-desc">Assim que surgiu a ideia da Operação Cachoeira: um protótipo navegável da Portaria Queda do Véu, pensado para quem ainda não conhece o caminho. Focado em agendamento, localização, segurança física e digital, conscientização ambiental e contatos — tudo em um só lugar, de forma simples e acessível.</p>
+        <p  class="exp-desc">(Protótipo em manutenção)</p>
+        <div class="exp-media-area">
+          <img width="1122" height="1122" alt="Image" src="https://github.com/user-attachments/assets/42b5d643-0705-4d62-8426-bb7355288c8c" />
+        </div>
+      </div>
+
+      <!-- ════ EXPERIÊNCIA 2 — EDITAR AQUI ════ -->
+       <div class="exp-item fade-in">
+        <div class="exp-period">2026 - EM ANDAMENTO</div>
+        <div class="exp-role">OPERAÇÃO ÍMA POR CPU</div>
+        <div class="exp-company">Ímas pintados à mão</div>
+        <p class="exp-desc">Um computador lento é algo que tira a felicidade de qualquer um. Por isso eu precisava encontrar um jeito de arrecadar dinheiro e comprar um notebook novo e, assim evoluir meus estudos.</p>
+        <p class="exp-desc">Foi aí que decidi transformar o que tenho em mãos agora, em lucro! A resposta estava onde eu menos esperava: nas pinturas que já faziam parte do meu dia a dia. A habilidade existia, o material existia — mas o desafio veio em transformar isso em estratégia.</p>
+        <p class="exp-desc"> Comecei a produzir e comercializar pinturas autorais em ímas de geladeira (de forma independente), assumindo cada etapa do processo: criação, precificação e vendas no ponto de Ecoturismo, utilizando estratégias de negociação.</p>
+        <p class="exp-desc"> Atualmente, já vendi 50% das peças finalizadas, arrecadando metade do valor necessário para alcançar minha meta final!.</p>
+        <div class="exp-media-area">
+          <img width="1254" height="1254" alt="Image" src="https://github.com/user-attachments/assets/b9a1fbb6-cf60-49bf-bbf9-abe6275428b7" />
+        </div>
+      </div>
+
+      <!-- ════ ADICIONAR NOVAS EXPERIÊNCIAS: copie o bloco acima ════ -->
+      <div class="exp-item fade-in">
+        <div class="exp-period">2024 - CONCLUÍDO</div>
+        <div class="exp-role">OPERAÇÃO MAQUETE</div>
+        <div class="exp-company">Modelagem 3D de construções reais</div>
+        <p class="exp-desc">Um engenheiro civil me lançou um desafio direto: em duas semanas, modelar a Igreja da cidade no SketchUp — ferramenta que eu nunca havia tocado, mas que topei o desafio.</p>
+        <p class="exp-desc">Sem medidas oficiais, sem domínio da ferramenta e com o tempo correndo, a solução foi improvisar com inteligência: cursos introdutórios para sair do zero, Google Earth para medições externas e fotos de outros usuários para construir o que eu não conhecia pessoalmente.</p>
+        <p class="exp-desc">Em duas semanas, a abstração virou projeto final. Paredes, proporções, detalhes — tudo modelado sem uma única medida oficial nas mãos. O resultado impressionou o próprio engenheiro que lançou o desafio.</p> 
+        <p class="exp-desc">No final, aquilo que começou como prova virou meu primeiro "portfólio": projetos reais para familiares — área gourmet, fachadas, reformas — e primeiro contato real com Gestão de Projetos (PMBOK) prazos, recursos e planejamento.</p>
+        
+        <div class="exp-media-area">
+          <img width="1254" height="1254" alt="Image" src="https://github.com/user-attachments/assets/322fa9c1-a077-404c-afbd-9597b00b8df3" />
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTATO / FOOTER ═══ -->
+<footer id="contato">
+  <div class="section-inner">
+    <div class="section-label" style="color:var(--blue)">Encerramento — Canal de Contato</div>
+    <h2 class="section-title fade-in">Vamos<br>Conversar?</h2>
+
+    <div class="contact-grid fade-in">
+
+      <a href="https://br.linkedin.com/in/heducarlos" target="_blank" class="contact-link-box contact-link-row" style="text-decoration:none">
+        <div class="contact-icon-box">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="black"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        </div>
+        <div>
+          <div class="contact-label">LinkedIn</div>
+          <div class="contact-value">linkedin.com/in/heducarlos</div>
+        </div>
+      </a>
+
+      <a href="https://github.com/Sant-Carlos/PROJETOS" target="_blank" class="contact-link-box contact-link-row" style="text-decoration:none">
+        <div class="contact-icon-box">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="black"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        </div>
+        <div>
+          <div class="contact-label">GitHub</div>
+          <div class="contact-value">Sant-Carlos/PROJETOS</div>
+        </div>
+      </a>
+
+      <a href="mailto:eduardo.mgbc@gmail.com" class="contact-link-box contact-link-row" style="text-decoration:none">
+        <div class="contact-icon-box">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22 7 12 13 2 7"/></svg>
+        </div>
+        <div>
+          <div class="contact-label">E-mail</div>
+          <!-- ════ SUBSTITUIR PELO SEU E-MAIL ════ -->
+          <div class="contact-value">eduardo.mgbc@gmail.com</div>
+        </div>
+      </a>
+
+      <div class="contact-link-box contact-link-row" style="cursor:default">
+        <div class="contact-icon-box">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div>
+          <div class="contact-label">Localização</div>
+          <div class="contact-value">Minas Gerais, Brasil</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-closing fade-in">
+      <p class="footer-msg">
+        "O mundo está cheio de coisas óbvias que por acaso ninguém jamais observa." — Sherlock Holmes.<br>
+        Meu papel é exatamente este: enxergar o que outros deixam passar.
+      </p>
+      <div class="footer-credits">
+        Carlos Bittencourt · <span>C.B.</span> · 2026<br>
+        Dossiê atualizado em 01/05/2026
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══ LIGHTBOX DA GALERIA ═══ -->
+<div class="proj-lightbox" id="projLightbox">
+  <button class="proj-lightbox-close" onclick="projLightboxClose()">✕</button>
+  <img id="projLightboxImg" src="" alt="" style="display:none;">
+  <div class="proj-lightbox-empty" id="projLightboxEmpty" style="display:none;">
+    <p>Imagem ainda não adicionada.</p>
+    <small>Descomente a tag &lt;img&gt; dentro do slot e insira o caminho da imagem.</small>
+  </div>
+</div>
+    
+<script>
+// ─── Navbar scroll ───
+window.addEventListener('scroll', () => {
+  document.querySelector('nav') && document.querySelector('nav').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ─── Fade in ───
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), 60);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// ─── Skill stagger ───
+document.querySelectorAll('.skills-grid .skill-card').forEach((card, i) => {
+  card.style.transitionDelay = `${i * 0.05}s`;
+});
+
+// ─── Galeria Lightbox ───
+let isDragging = false;
+let startX, startY, scrollX = 0, scrollY = 0;
+
+function projLightboxOpen(slot) {
+  const img = slot.querySelector('img');
+  const lb = document.getElementById('projLightbox');
+  const lbImg = document.getElementById('projLightboxImg');
+  const lbEmpty = document.getElementById('projLightboxEmpty');
+
+  if (img) {
+    lbImg.src = img.src;
+    lbImg.alt = img.alt;
+    lbImg.style.display = 'block';
+    lbImg.style.transform = 'scale(1)';
+    lbImg.dataset.scale = 1;
+    scrollX = 0;
+    scrollY = 0;
+    lbEmpty.style.display = 'none';
+  } else {
+    lbImg.style.display = 'none';
+    lbEmpty.style.display = 'block';
+  }
+  lb.classList.add('open');
+}
+
+document.getElementById('projLightbox').addEventListener('wheel', function(e) {
+  e.preventDefault();
+  const img = document.getElementById('projLightboxImg');
+  let scale = parseFloat(img.dataset.scale || 1);
+  scale += e.deltaY < 0 ? 0.15 : -0.15;
+  scale = Math.min(Math.max(scale, 0.5), 5);
+  img.dataset.scale = scale;
+  img.style.transform = `scale(${scale}) translate(${scrollX / scale}px, ${scrollY / scale}px)`;
+}, { passive: false });
+
+const lb = document.getElementById('projLightbox');
+
+lb.addEventListener('mousedown', function(e) {
+  if (e.target.id !== 'projLightboxImg') return;
+  isDragging = true;
+  startX = e.clientX - scrollX;
+  startY = e.clientY - scrollY;
+  lb.style.cursor = 'grabbing';
+});
+
+lb.addEventListener('mousemove', function(e) {
+  if (!isDragging) return;
+  scrollX = e.clientX - startX;
+  scrollY = e.clientY - startY;
+  const scale = parseFloat(document.getElementById('projLightboxImg').dataset.scale || 1);
+  document.getElementById('projLightboxImg').style.transform = `scale(${scale}) translate(${scrollX / scale}px, ${scrollY / scale}px)`;
+});
+
+lb.addEventListener('mouseup', function() {
+  isDragging = false;
+  lb.style.cursor = 'default';
+});
+
+lb.addEventListener('mouseleave', function() {
+  isDragging = false;
+  lb.style.cursor = 'default';
+});
+
+function projLightboxClose() {
+  document.getElementById('projLightbox').classList.remove('open');
+}
+
+function projLightboxClose() {
+  document.getElementById('projLightbox').classList.remove('open');
+}
+function projLightboxClose() {
+  document.getElementById('projLightbox').classList.remove('open');
+}
+
+document.getElementById('projLightbox').addEventListener('click', function(e) {
+  if (e.target === this) projLightboxClose();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') projLightboxClose();
+});
+</script>
+</body>
+</html>
